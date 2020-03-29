@@ -2,38 +2,89 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Traits\CreatesNanoId;
+use Illuminate\Database\Eloquent\Relations;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+
+    use CreatesNanoId;
     use Notifiable;
+    use SoftDeletes;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
+    protected $table = 'users';
+
     protected $fillable = [
-        'name', 'email', 'password',
+        // 'uuid',
+        'name',
+        'email',
+        'password',
+        // 'remember_token',
+        'last_login_at',
+        // 'created_at',
+        // 'updated_at',
+        // 'deleted_at',
     ];
 
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
+    protected $guarded = [
+        'uuid',
+        'remember_token',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
+
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
     ];
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
+    protected $dates = [
+        'last_login_at',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
+
+    public function magicLinks(): Relations\HasMany
+    {
+        return $this->hasMany(
+            MagicLink::class,
+            'user_uuid',
+            'uuid'
+        );
+    }
+
+    public function latestMagicLink()
+    {
+        return $this->magicLinks()
+            ->latest()
+            ->first();
+    }
+
+    public function channels(): Relations\BelongsToMany
+    {
+        return $this->belongsToMany(
+            Channel::class,
+            'channel_users',
+            'user_uuid',
+            'channel_uuid'
+        );
+    }
+
+    public function messages(): Relations\HasMany
+    {
+        return $this->hasMany(
+            Message::class,
+            'user_uuid',
+            'uuid'
+        );
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'uuid';
+    }
 }
