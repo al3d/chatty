@@ -17,7 +17,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - nfs-laravel:/application:delegated
+      - ../laravel/application:delegated
       - ../logs/nginx:/var/log/nginx
       - ./build/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
 
@@ -35,7 +35,7 @@ services:
       - mysql
       - redis
     volumes:
-      - ../laravel:/application
+      - nfs-laravel:/application:delegated
       - ../laravel/storage/logs:/application/storage/logs
       - ./build/laravel/php-overrides.ini:/usr/local/etc/php/conf.d/99-overrides.ini
 
