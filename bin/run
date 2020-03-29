@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+PWD=`pwd`
+COMMAND="docker-compose -f ${PWD}/docker/docker-compose.yml"
+
+RED='\033[0;31m'
+CYAN='\033[0;36m'
+GREEN='\033[0;32m'
+NOC='\033[0m' # No Color
+
+[ -z "$1" ] && printf "${RED}Please specify a CLI command (ex. ls)${NOC}" && exit
+
+set -o allexport
+source "$PWD/laravel/.env"
+set +o allexport
+
+printf "${CYAN}Running... ${GREEN}$COMMAND $@${NOC}\n"
+
+$COMMAND $@

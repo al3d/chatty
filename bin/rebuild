@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+PWD=`pwd`
+/bin/bash ${PWD}/bin/run up --build -d
