@@ -1,17 +1,17 @@
 version: "3.4"
 
 services:
-  nginx:
+  docker-nginx:
     image: nginx:alpine
-    container_name: nginx
+    container_name: docker-nginx
     working_dir: /application
     restart: always
     depends_on:
       - app-laravel
       # - app-websockets
-      - mail
-      - mysql
-      - redis
+      - docker-mail
+      - docker-mysql
+      - docker-redis
     networks:
       - default
     ports:
@@ -28,12 +28,10 @@ services:
     restart: always
     networks:
       - default
-    ports:
-      - "80"
     links:
-      - mail
-      - mysql
-      - redis
+      - docker-mail
+      - docker-mysql
+      - docker-redis
     volumes:
       - nfs-laravel:/application:delegated
       - ../laravel/storage/logs:/application/storage/logs
@@ -48,11 +46,11 @@ services:
   # # 	ports:
   # # 		- "6001:6001"
   # # 	links:
-  # # 		- redis
+  # # 		- docker-redis
 
-  mail:
+  docker-mail:
     image: mailhog/mailhog:latest
-    container_name: mail
+    container_name: docker-mail
     restart: always
     ports:
       - "${MAIL_PORT}:1025"
@@ -60,7 +58,7 @@ services:
 
   mysql:
     image: mysql:5.7
-    container_name: mysql
+    container_name: docker-mysql
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
@@ -75,9 +73,9 @@ services:
       - data-mysql:/var/lib/mysql
       - ./build/mysql/initial.sql:/docker-entrypoint-initdb.d/${DB_DATABASE}.sql:cached
 
-  redis:
+  docker-redis:
     image: redis:alpine
-    container_name: redis
+    container_name: docker-redis
     restart: always
     ports:
       - "${REDIS_PORT}"
