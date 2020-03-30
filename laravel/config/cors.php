@@ -15,7 +15,10 @@ return [
     |
     */
 
-    'paths' => ['api/*'],
+    'paths' => [
+        'auth/*',
+        'api/*',
+    ],
 
     'allowed_methods' => ['*'],
 
@@ -29,6 +32,9 @@ return [
 
     'max_age' => 0,
 
-    'supports_credentials' => false,
+    /**
+     * Setting this to true is important for CORS to work with sanctum
+     */
+    'supports_credentials' => true,
 
 ];

@@ -41,6 +41,16 @@ return [
             'ignore_exceptions' => false,
         ],
 
+        'docker' => [
+            'driver' => 'stack',
+            'name' => 'docker',
+            'channels' => [
+                'stderr',
+                // 'syslog',
+                // 'errorlog',
+            ],
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),

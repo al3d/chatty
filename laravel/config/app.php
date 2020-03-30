@@ -2,6 +2,8 @@
 
 return [
 
+    'frontend_url' => env('APP_FRONTEND_URL', 'http://localhost:3000'),
+
     'nanoid' => [
 
         // no 0,1,I,Z to prevent lookalikes; no F,U to prevent obscenities
