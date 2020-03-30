@@ -48,22 +48,6 @@ class User extends Authenticatable
         'deleted_at',
     ];
 
-    public function magicLinks(): Relations\HasMany
-    {
-        return $this->hasMany(
-            MagicLink::class,
-            'user_uuid',
-            'uuid'
-        );
-    }
-
-    public function latestMagicLink()
-    {
-        return $this->magicLinks()
-            ->latest()
-            ->first();
-    }
-
     public function channels(): Relations\BelongsToMany
     {
         return $this->belongsToMany(
