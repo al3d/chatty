@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+PWD=`pwd`
+
+CONTAINER=$1
+if [ -z "$1" ]; then
+    CONTAINER="api-laravel"
+fi
+
+/bin/bash ${PWD}/bin/run logs $@
