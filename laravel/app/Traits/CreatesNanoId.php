@@ -3,14 +3,14 @@
 namespace App\Traits;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Helpers\Str;
+use App\Support\Str;
 
 trait CreatesNanoId
 {
 
     public static function bootCreatesNanoId()
     {
-        static::created(function (Model $model) {
+        static::creating(function (Model $model) {
             $model->uuid = Str::nanoId();
             $model->save();
         });

@@ -2,6 +2,14 @@
 
 return [
 
+    'nanoid' => [
+
+        // no 0,1,I,Z to prevent lookalikes; no F,U to prevent obscenities
+        'alphabet' => '23456789ABCDEGHJKLMNPQRSTVWXY',
+
+        'length' => 16,
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Application Name
