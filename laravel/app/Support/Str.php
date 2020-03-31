@@ -46,22 +46,25 @@ class Str extends BaseStr
             ->implode($options['delimiter']);
     }
 
-
-
     /**
      * @see https://chrisblackwell.me/generate-perfect-initials-using-php/
      */
     public static function initials(string $name): string
     {
-        $name = static::upper($name);
-        $words = explode(' ', $name);
+        /**
+         * Convert multi-byte characters (for more exotic names) into
+         * their ascii counterparts for consistency
+         */
+        $name = static::ascii($name);
+        $words = explode(' ', static::upper($name));
         if (count($words) >= 2) {
             return static::substr($words[0], 0, 1) . static::substr(end($words), 0, 1);
         }
-        preg_match_all('#([A-Z]+)#', $name, $capitals);
-        if (count($capitals[1]) >= 2) {
-            return static::substr(implode('', $capitals[1]), 0, 2);
+        $words = explode('-', static::kebab($name));
+        if (count($words) > 1) {
+            return static::initials(implode(' ', $words));
         }
-        return static::substr($name, 0, 2);
+        return static::upper(static::substr($name, 0, 2));
+    }
     }
 }
