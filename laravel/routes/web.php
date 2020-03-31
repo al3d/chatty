@@ -33,5 +33,5 @@ Route::prefix('/auth')->group(function () {
  * zeit offer, we might run into infinity redirects for api urls.
  */
 Route::any('/{url}', function ($url = '') {
-    return Response::redirectTo(Url::frontend('/' . $url), 301);
+    return Response::redirectTo(Url::frontend($url), 301);
 })->where('url', '.*');
