@@ -2,7 +2,6 @@
 
 namespace App\Notifications;
 
-use App\Models\User;
 use App\Support\Url;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -13,13 +12,11 @@ class RegisteredNotification extends Notification
 {
     use Queueable;
 
-    protected $user;
-    protected $generatedPassword;
+    protected $password;
 
-    public function __construct(User $user, $generatedPassword)
+    public function __construct($password)
     {
-        $this->user = $user;
-        $this->generatedPassword = $generatedPassword;
+        $this->generatedPassword = $password;
     }
 
     public function via($notifiable)
@@ -37,9 +34,9 @@ class RegisteredNotification extends Notification
     {
         return (new MailMessage)
             ->subject('Welcome to chatty')
-            ->line('Welcome to chatty')
+            ->line('Welcome to chatty, ' . $notifiable->name)
             ->line('We\'ve created a password for you:')
-            ->line(sprintf('<b>%s</b>', $this->generatedPassword))
+            ->line(sprintf('<b>%s</b>', $this->password))
             ->line('Keep it safe. You can change it in the app.')
             ->action('Visit Chatty', url(Url::frontend()))
             ->line('Thank you for joining!');
