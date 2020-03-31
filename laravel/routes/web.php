@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth;
 use App\Support\Url;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Response;
 
 Route::prefix('/auth')->group(function () {
 
@@ -27,17 +28,10 @@ Route::prefix('/auth')->group(function () {
 });
 
 /**
- * Fallback url for any GET requests to our frontend
- * that don't match. Performs a specific redirect to the frontend.
+ * Fallback url for any requests to our that don't match. Performs a specific
+ * redirect to the frontend. If we use frontend proxy features like netlify and
+ * zeit offer, we might run into infinity redirects for api urls.
  */
-Route::get('/{url}', function ($url) {
-    return redirect(Url::frontend('/' . $url), 301);
+Route::any('/{url}', function ($url = '') {
+    return Response::redirectTo(Url::frontend('/' . $url), 301);
 })->where('url', '.*');
-
-/**
- * Fallback for any other types of request (POST, PUT, DELETE, OPTIONS)
- * that don't match above. Simply redirects to the frontend's base url.
- */
-Route::fallback(function () {
-    return redirect(Url::frontend(), 301);
-});
