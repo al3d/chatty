@@ -67,5 +67,9 @@ class Str extends BaseStr
         }
         return static::upper(static::substr($name, 0, 2));
     }
+
+    public static function hexColor(string $str): string
+    {
+        return static::substr(md5(static::lower($str)), 0, 6);
     }
 }

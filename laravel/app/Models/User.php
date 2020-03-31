@@ -85,6 +85,11 @@ class User extends Authenticatable
         return Str::initials($this->name);
     }
 
+    public function getColourAttribute(): string
+    {
+        return Str::hexColor($this->name);
+    }
+
     public function getLoginHashAttribute(): string
     {
         return hash('sha256', $this->uuid . $this->salt);
