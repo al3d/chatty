@@ -2,11 +2,13 @@
 
 namespace App\Support;
 
+use Illuminate\Support\Facades\Config;
+
 class Url
 {
 
     public static function frontend($url = '')
     {
-        return rtrim(config('app.frontend_url'), '/') . $url;
+        return rtrim(Config::get('app.frontend_url') . $url, '/');
     }
 }

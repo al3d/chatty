@@ -8,6 +8,7 @@ use App\Notifications\MagicLinkNotification;
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\URL;
 
 class LoginController extends BaseController
@@ -37,6 +38,6 @@ class LoginController extends BaseController
 
         $user->notify(new MagicLinkNotification($magicLink));
 
-        return response('', 204);
+        return Response::noContent();
     }
 }

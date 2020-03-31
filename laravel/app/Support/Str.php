@@ -4,6 +4,7 @@ namespace App\Support;
 
 use Hidehalo\Nanoid\Client;
 use Illuminate\Support\Str as BaseStr;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 
 class Str extends BaseStr
@@ -14,8 +15,8 @@ class Str extends BaseStr
      */
     public static function nanoId(): string
     {
-        $alphabet = config('app.nanoid.alphabet', '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz');
-        $length = config('app.nanoid.length', 30);
+        $alphabet = Config::get('app.nanoid.alphabet', '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz');
+        $length = Config::get('app.nanoid.length', 30);
         $client = new Client();
         return $client->formattedId($alphabet, $length);
     }

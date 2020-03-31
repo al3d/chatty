@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\BaseController;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 
 class StartController extends BaseController
 {
@@ -15,7 +16,7 @@ class StartController extends BaseController
             'email' => ['required', 'email'],
         ]);
 
-        return response()->json([
+        return Response::json([
             'exists' => User::whereEmail($data['email'])->exists(),
         ]);
     }

@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Response;
 
 class MagicLinkController extends BaseController
 {
@@ -19,6 +20,6 @@ class MagicLinkController extends BaseController
 
         Event::dispatch(new LoggedInViaMagicLink($user));
 
-        return redirect(Url::frontend());
+        return Response::redirectTo(Url::frontend());
     }
 }
