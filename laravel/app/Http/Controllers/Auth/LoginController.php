@@ -31,10 +31,7 @@ class LoginController extends BaseController
             return $this->sendFailedLoginResponse($request);
         }
 
-        $magicLink = URL::temporarySignedRoute('magic_link', Carbon::now()->addHours(24), [
-            'userHash' => $user->login_hash,
-            'remember' => $request->filled('magic_link') ? 'true' : 'false',
-        ]);
+        $magicLink = $user->generateLoginMagicLink('magic_link', $request->get('remember'));
 
         $user->notify(new MagicLinkNotification($magicLink));
 

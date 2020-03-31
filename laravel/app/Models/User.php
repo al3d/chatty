@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\CreatesNanoId;
 use App\Support\Str;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\URL;
 
 class User extends Authenticatable
 {
@@ -104,6 +106,14 @@ class User extends Authenticatable
     public function routeNotificationForMail(Notification $notification)
     {
         return [$this->email => $this->name];
+    }
+
+    public function generateLoginMagicLink($routeName, $remember = false, $expiryHours = 24)
+    {
+        return URL::temporarySignedRoute($routeName, Carbon::now()->addHours($expiryHours), [
+            'userHash' => $this->login_hash,
+            'remember' => $remember ? 'true' : 'false',
+        ]);
     }
 
     public static function generateSalt(): string
