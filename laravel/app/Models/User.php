@@ -71,4 +71,9 @@ class User extends Authenticatable
     {
         return 'uuid';
     }
+
+    public function getInitialsAttribute(): string
+    {
+        return Str::initials($this->name);
+    }
 }

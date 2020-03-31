@@ -20,6 +20,7 @@ class UserResource extends JsonResource
         return [
             'uuid' => $this->uuid,
             'name' => $this->name,
+            'initials' => $this->initials,
             'email' => $this->when($this->is_owner, $this->email),
             'last_login_at' => $this->last_login_at->toIso8601String(),
             'created_at' => $this->when($this->is_owner, $this->created_at->toIso8601String()),

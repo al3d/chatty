@@ -44,4 +44,23 @@ class Str extends BaseStr
             ->random($options['words'])
             ->implode($options['delimiter']);
     }
+
+
+
+    /**
+     * @see https://chrisblackwell.me/generate-perfect-initials-using-php/
+     */
+    public static function initials(string $name): string
+    {
+        $name = static::upper($name);
+        $words = explode(' ', $name);
+        if (count($words) >= 2) {
+            return static::substr($words[0], 0, 1) . static::substr(end($words), 0, 1);
+        }
+        preg_match_all('#([A-Z]+)#', $name, $capitals);
+        if (count($capitals[1]) >= 2) {
+            return static::substr(implode('', $capitals[1]), 0, 2);
+        }
+        return static::substr($name, 0, 2);
+    }
 }
