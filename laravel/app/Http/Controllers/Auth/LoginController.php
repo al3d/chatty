@@ -18,7 +18,7 @@ class LoginController extends BaseController
 
     public function __invoke(Request $request)
     {
-        if ($request->filled('magic_link')) {
+        if ($request->get('magic_link')) {
             return $this->magicLink($request);
         }
 
