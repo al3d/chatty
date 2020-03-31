@@ -12,7 +12,6 @@ trait CreatesNanoId
     {
         static::creating(function (Model $model) {
             $model->uuid = Str::nanoId();
-            $model->save();
         });
 
         static::replicating(function (Model $model) {
