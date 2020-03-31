@@ -2,7 +2,7 @@
 
 namespace App\Support;
 
-use Illuminate\Support\ARr as BaseArr;
+use Illuminate\Support\Arr as BaseArr;
 
 class Arr extends BaseArr
 {
