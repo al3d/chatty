@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Notifications\Notification;
 
 class User extends Authenticatable
 {
@@ -93,6 +94,11 @@ class User extends Authenticatable
     {
         return $query
             ->whereRaw('SHA2(CONCAT(uuid, salt)) = ?', [$hash]);
+    }
+
+    public function routeNotificationForMail(Notification $notification)
+    {
+        return [$this->email => $this->name];
     }
 
     public static function generateSalt(): string
