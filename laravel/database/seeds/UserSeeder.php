@@ -17,7 +17,8 @@ class UserSeeder extends Seeder
             'email' => 'admin@example.com',
             'password' => Hash::make('this-is-a-password'),
             'salt' => User::generateSalt(),
-            'created_at' => DB::raw('NOW()'),
+            'last_login_at' => now()->toDateTimeString(),
+            'created_at' => now()->toDateTimeString(),
         ]);
     }
 }
