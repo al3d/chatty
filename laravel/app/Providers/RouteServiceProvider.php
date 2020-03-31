@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
 
@@ -30,9 +31,15 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
-
         parent::boot();
+
+        /**
+         *
+         */
+        Route::bind('userHash', function ($hash) {
+            return User::whereLoginHash($hash)
+                ->firstOrFail();
+        });
     }
 
     /**
