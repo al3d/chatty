@@ -3,6 +3,9 @@
 namespace App\Models;
 
 use App\Traits\CreatesNanoId;
+use App\Support\Str;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -10,6 +13,8 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+
+    const SALT_LENGTH = 60;
 
     use CreatesNanoId;
     use Notifiable;
@@ -22,6 +27,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        // 'salt',
         // 'remember_token',
         'last_login_at',
         // 'created_at',
@@ -31,6 +37,7 @@ class User extends Authenticatable
 
     protected $guarded = [
         'uuid',
+        'salt',
         'remember_token',
         'created_at',
         'updated_at',
@@ -75,5 +82,30 @@ class User extends Authenticatable
     public function getInitialsAttribute(): string
     {
         return Str::initials($this->name);
+    }
+
+    public function getLoginHashAttribute(): string
+    {
+        return hash('sha256', $this->uuid . $this->salt);
+    }
+
+    public function scopeWhereLoginHash(Builder $query, $hash): Builder
+    {
+        return $query
+            ->whereRaw('SHA2(CONCAT(uuid, salt)) = ?', [$hash]);
+    }
+
+    public static function generateSalt(): string
+    {
+        return Str::random(static::SALT_LENGTH);
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function (Model $model) {
+            $model->salt = static::generateSalt();
+        });
     }
 }

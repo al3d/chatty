@@ -56,6 +56,7 @@ class Channel extends Model
             'channel_uuid',
             'uuid'
         );
+        // should it include trashed/deleted/self-removed users?
     }
 
     public function members(): Relations\HasMany
