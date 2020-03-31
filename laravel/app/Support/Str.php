@@ -4,6 +4,7 @@ namespace App\Support;
 
 use Hidehalo\Nanoid\Client;
 use Illuminate\Support\Str as BaseStr;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 
@@ -31,16 +32,16 @@ class Str extends BaseStr
      */
     public static function generatePassword(array $options = array()): string
     {
-        $options = array_merge($options, [
-            'file_path' => resource_path('dictionary.txt'),
+        $options = array_merge([
+            'file_path' => App::resourcePath('dictionary.txt'),
             'words' => 4,
             'delimiter' => '-',
             'min_char_length' => 5,
-        ]);
+        ], $options);
         $contents = File::get($options['file_path']);
         return collect(explode(PHP_EOL, $contents))
             ->filter(function ($word) use ($options) {
-                return $word >= $options['min_char_length'];
+                return static::length($word) >= $options['min_char_length'];
             })
             ->random($options['words'])
             ->implode($options['delimiter']);
