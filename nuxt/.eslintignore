@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.nuxt/
+
+components/
+layouts/
+middleware/
+pages/
+plugins/
+store/
+test/
