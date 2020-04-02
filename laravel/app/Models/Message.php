@@ -15,20 +15,18 @@ class Message extends Model
 
     protected $table = 'messages';
 
+    protected $perPage = 30;
+
     protected $fillable = [
-        // 'uuid',
-        // 'channel_uuid',
-        // 'user_uuid',
+        'channel_id',
+        'user_id',
         'message',
-        // 'created_at',
-        // 'updated_at',
-        // 'deleted_at',
     ];
 
     protected $guarded = [
         'uuid',
-        'channel_uuid',
-        'user_uuid',
+        'channel_id',
+        'user_id',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -44,8 +42,7 @@ class Message extends Model
     {
         return $this->belongsTo(
             Channel::class,
-            'channel_uuid',
-            'uuid'
+            'channel_id'
         );
     }
 
@@ -53,9 +50,13 @@ class Message extends Model
     {
         return $this->belongsTo(
             User::class,
-            'user_uuid',
-            'uuid'
+            'user_id'
         );
+    }
+
+    public function getIsDeletedAttribute(): bool
+    {
+        return $this->deleted_at !== null;
     }
 
     public function getRouteKeyName(): string

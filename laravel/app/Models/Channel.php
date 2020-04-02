@@ -17,21 +17,26 @@ class Channel extends Model
     protected $table = 'channels';
 
     protected $fillable = [
-        // 'uuid',
         'name',
         'description',
-        // 'creator_uuid',
-        // 'created_at',
-        // 'updated_at',
-        // 'deleted_at',
+        'creator_id',
     ];
 
     protected $guarded = [
         'uuid',
-        'creator_uuid',
+        'creator_id',
+        'is_deleteable',
         'created_at',
         'updated_at',
         'deleted_at',
+    ];
+
+    protected $attributes = [
+        'is_deleteable' => true,
+    ];
+
+    protected $casts = [
+        'is_deleteable' => 'boolean',
     ];
 
     protected $dates = [
@@ -40,50 +45,53 @@ class Channel extends Model
         'deleted_at',
     ];
 
+    protected $with = [
+        'creator',
+        'members',
+    ];
+
     public function creator(): Relations\BelongsTo
     {
         return $this->belongsTo(
             User::class,
-            'creator_uuid',
-            'uuid'
+            'creator_id'
         );
     }
 
     public function messages(): Relations\HasMany
     {
-        return $this->hasMany(
-            Message::class,
-            'channel_uuid',
-            'uuid'
-        );
-        // should it include trashed/deleted/self-removed users?
-    }
-
-    public function members(): Relations\HasMany
-    {
-        return $this->hasMany(
-            ChannelUser::class,
-            'channel_uuid',
-            'uuid'
-        );
-    }
-
-    // @todo - check this is the best way to do this - seems hacky
-    public function scopeOrderByLatestMessages(Builder $query): Builder
-    {
-        return $query
-            ->leftJoin(
-                'messages',
-                'channels.name',
-                '=',
-                'messages.channel'
+        return $this
+            ->hasMany(
+                Message::class,
+                'channel_id'
             )
-            ->orderByDesc('messages.created_at')
-            ->select('channels.*');
+            ->withTrashed()
+        ;
+    }
+
+    public function messagesListedByNewestFirst()
+    {
+        return $this
+            ->messages()
+            ->latest();
+    }
+
+    public function members(): Relations\BelongsToMany
+    {
+        return $this
+            ->belongsToMany(
+                User::class,
+                'channel_users',
+                'channel_id',
+                'user_id'
+            )
+            ->orderByDesc('users.last_login_at')
+            ->orderByDesc('users.created_at')
+        ;
     }
 
     public function getRouteKeyName(): string
     {
-        return 'uuid';
+        return 'name';
     }
 }

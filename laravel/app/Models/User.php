@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\CreatesNanoId;
 use App\Support\Str;
+use App\Support\Url as UrlHelper;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -17,8 +18,6 @@ use Illuminate\Support\Facades\URL;
 class User extends Authenticatable
 {
 
-    const SALT_LENGTH = 60;
-
     use CreatesNanoId;
     use Notifiable;
     use SoftDeletes;
@@ -26,22 +25,15 @@ class User extends Authenticatable
     protected $table = 'users';
 
     protected $fillable = [
-        // 'uuid',
         'name',
         'email',
         'password',
-        // 'salt',
-        // 'remember_token',
+        'remember_token',
         'last_login_at',
-        // 'created_at',
-        // 'updated_at',
-        // 'deleted_at',
     ];
 
     protected $guarded = [
         'uuid',
-        'salt',
-        'remember_token',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -63,8 +55,8 @@ class User extends Authenticatable
         return $this->belongsToMany(
             Channel::class,
             'channel_users',
-            'user_uuid',
-            'channel_uuid'
+            'user_id',
+            'channel_id'
         );
     }
 
@@ -72,8 +64,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(
             Message::class,
-            'user_uuid',
-            'uuid'
+            'user_id'
         );
     }
 
@@ -92,41 +83,21 @@ class User extends Authenticatable
         return Str::hexColor($this->name);
     }
 
-    public function getLoginHashAttribute(): string
-    {
-        return hash('sha256', $this->uuid . $this->salt);
-    }
-
-    public function scopeWhereLoginHash(Builder $query, $hash): Builder
-    {
-        return $query
-            ->whereRaw('SHA2(CONCAT(uuid, salt)) = ?', [$hash]);
-    }
-
     public function routeNotificationForMail(Notification $notification)
     {
         return [$this->email => $this->name];
     }
 
-    public function generateLoginMagicLink($routeName, $remember = false, $expiryHours = 24)
+    public function generateLoginMagicLink($remember = false, $expiryHours = 24)
     {
-        return URL::temporarySignedRoute($routeName, Carbon::now()->addHours($expiryHours), [
-            'userHash' => $this->login_hash,
+        $url = URL::temporarySignedRoute('magic_link', Carbon::now()->addHours($expiryHours), [
+            'user' => $this,
             'remember' => $remember ? 'true' : 'false',
         ]);
-    }
-
-    public static function generateSalt(): string
-    {
-        return Str::random(static::SALT_LENGTH);
-    }
-
-    public static function boot()
-    {
-        parent::boot();
-
-        static::creating(function (Model $model) {
-            $model->salt = static::generateSalt();
-        });
+        return Str::replaceFirst(
+            URL::route('magic_link', [ 'user' => $this ]), // generating the same route without signed bits
+            UrlHelper::frontend(sprintf('/login/magically/%s', $this->uuid)), // replacing with frontend. Hacky, but it'll do for now
+            $url
+        );
     }
 }

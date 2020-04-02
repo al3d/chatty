@@ -2,35 +2,26 @@
 
 namespace App\Models;
 
-use App\Traits\CreatesNanoId;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations;
 
 class ChannelUser extends Model
 {
 
-    use CreatesNanoId;
+    public $timestamps = false;
 
     protected $table = 'channel_users';
 
-    protected $timestamps = false;
-
     protected $fillable = [
-        // 'uuid',
-        'channel_uuid',
-        'user_uuid',
-    ];
-
-    protected $guarded = [
-        'uuid',
+        'channel_id',
+        'user_id',
     ];
 
     public function channel(): Relations\BelongsTo
     {
         return $this->belongsTo(
             Channel::class,
-            'channel_uuid',
-            'uuid'
+            'channel_id'
         );
     }
 
@@ -38,8 +29,7 @@ class ChannelUser extends Model
     {
         return $this->belongsTo(
             User::class,
-            'user_uuid',
-            'uuid'
+            'user_id'
         );
     }
 }
