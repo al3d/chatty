@@ -1,21 +1,11 @@
-import Vue from 'vue'
-import axios from 'axios'
-
-export default function ({ $axios }) {
-
-    // Adding the ability to cancel req uests
-    const CancelToken = axios.CancelToken
-
-    Vue.prototype.$axiosCancelToken = CancelToken.source()
-
-    Vue.prototype.$axiosRefreshCancelToken = () => {
-        Vue.prototype.$axiosCancelToken = CancelToken.source()
+export default function ({ $axios, store }) {
+  $axios.onRequest(config => {
+    if (store.getters.socketId) {
+      config.headers['X-Socket-ID'] = store.getters.socketId
     }
-
-    $axios.onRequest(config => {
-        config.headers['Accept'] = 'application/json'
-        config.headers['Content-Type'] = 'application/json'
-        // @todo - add withCredentials here
-        config.cancelToken = Vue.prototype.$axiosCancelToken.token
-    })
+    config.headers['Accept'] = 'application/json'
+    config.headers['Content-Type'] = 'application/json'
+    config.headers['X-Requested-With'] = 'XMLHttpRequest'
+    config.withCredentials = true
+  })
 }
