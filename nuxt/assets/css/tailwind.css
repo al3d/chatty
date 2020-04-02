@@ -3,3 +3,35 @@
 @import 'tailwindcss/components';
 /* purgecss end ignore */
 @import 'tailwindcss/utilities';
+
+#__nuxt,
+#__layout {
+    @apply min-h-screen;
+}
+
+.fade-enter-active {
+  transition: opacity .7s;
+}
+.fade-leave-active {
+    transition: opacity .2s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+
+/*
+
+Since I used Tailwind UI to create the application skin and it uses
+alpine.js, it has the following transition for the dropdown. Need
+to refactor this for vue, sometime.
+
+.zoom-in-*
+
+x-transition:enter="transition ease-out duration-100"
+x-transition:enter-start="transform opacity-0 scale-95"
+x-transition:enter-end="transform opacity-100 scale-100"
+x-transition:leave="transition ease-in duration-75"
+x-transition:leave-start="transform opacity-100 scale-100"
+x-transition:leave-end="transform opacity-0 scale-95"
+
+*/
