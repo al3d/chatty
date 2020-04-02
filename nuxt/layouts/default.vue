@@ -1,55 +1,103 @@
 <template>
-  <div>
-    <nuxt />
+  <div class="bg-bg-white min-h-screen">
+    <nav class="fixed top-2 right-2">
+      <div class="rounded-full shadow bg-gray-800 flex flex-col">
+        <!-- <button
+          @click="showUserInfo"
+          class="m-4">
+          <span class="inline-flex items-center justify-center h-12 w-12 rounded-full border-2 border-white bg-blue-700 hover:bg-white text-white hover:text-blue-700">
+            <span class="text-base font-medium leading-none tracking-wider">{{ user.initials }}</span>
+          </span>
+        </button>
+        <div class="m-4 mt-0 relative">
+          <span class="cursor-pointer inline-flex items-center justify-center h-12 w-12 rounded-full border-2 border-gray-500 hover:border-white bg-gray-700 text-gray-500 hover:text-white">
+            <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+          </span>
+          <span
+            v-if="hasNotifications"
+            class="absolute top-0 right-0 block h-3 w-3 rounded-full text-white bg-red-700"></span>
+        </div> -->
+        <div class="m-4">
+          <span
+            :title="user.name"
+            :style="{ 'background-color': `#${user.color}` }"
+            class="cursor-default inline-flex items-center justify-center h-12 w-12 rounded-full border-2 border-white text-white">
+            <span class="text-base font-medium leading-none tracking-wider">{{ user.initials }}</span>
+          </span>
+        </div>
+        <nuxt-link
+          to="/logout"
+          class="m-4 mt-0">
+          <span class="cursor-pointer inline-flex items-center justify-center h-12 w-12 rounded-full border-2 border-gray-500 hover:border-white bg-gray-700 text-gray-500 hover:text-white">
+            <svg class="transform rotate-180 h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+              <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M11 16L7 12M7 12L11 8M7 12L21 12M16 16V17C16 18.6569 14.6569 20 13 20H6C4.34315 20 3 18.6569 3 17V7C3 5.34315 4.34315 4 6 4H13C14.6569 4 16 5.34315 16 7V8" />
+            </svg>
+          </span>
+        </nuxt-link>
+      </div>
+    </nav>
+    <main>
+      <nuxt keep-alive />
+    </main>
+    <footer class="bg-white border-t border-gray-22">
+      <div class="max-w-screen-xl mx-auto p-4 sm:px-6 md:flex md:items-center md:justify-between lg:px-8">
+        <div class="flex justify-center md:order-2">
+          <a
+            href="https://www.instagram.com/al3d/"
+            class="ml-6 text-gray-400 hover:text-gray-500"
+            target="_blank">
+            <span class="sr-only">Instagram</span>
+            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+              <path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clip-rule="evenodd"/>
+            </svg>
+          </a>
+          <a
+            href="https://twitter.com/al3d"
+            class="ml-6 text-gray-400 hover:text-gray-500"
+            target="_blank">
+            <span class="sr-only">Twitter</span>
+            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"/>
+            </svg>
+          </a>
+          <a
+            href="https://github.com/al3d"
+            class="ml-6 text-gray-400 hover:text-gray-500"
+            target="_blank">
+            <span class="sr-only">GitHub</span>
+            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+              <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"/>
+            </svg>
+          </a>
+        </div>
+        <div class="mt-8 md:mt-0 md:order-1 text-gray-500">
+          &copy; {{ year }} Aled Bartholomew, built as a code test for
+          <a
+            href="https://www.signable.co.uk"
+            class="text-gray-600 hover:text-blue-900"
+            target="_blank">
+            Signable
+          </a>, using code from TailwindUI.
+        </div>
+      </div>
+    </footer>
   </div>
 </template>
 
-<style>
-html {
-  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 16px;
-  word-spacing: 1px;
-  -ms-text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  box-sizing: border-box;
-}
+<script>
+import { mapGetters } from 'vuex'
 
-*,
-*:before,
-*:after {
-  box-sizing: border-box;
-  margin: 0;
+export default {
+  computed: {
+    ...mapGetters([
+      'user',
+      'hasNotifications',
+    ]),
+    year() {
+      return (new Date).getFullYear()
+    }
+  },
 }
-
-.button--green {
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid #3b8070;
-  color: #3b8070;
-  text-decoration: none;
-  padding: 10px 30px;
-}
-
-.button--green:hover {
-  color: #fff;
-  background-color: #3b8070;
-}
-
-.button--grey {
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid #35495e;
-  color: #35495e;
-  text-decoration: none;
-  padding: 10px 30px;
-  margin-left: 15px;
-}
-
-.button--grey:hover {
-  color: #fff;
-  background-color: #35495e;
-}
-</style>
+</script>
