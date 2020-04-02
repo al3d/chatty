@@ -7,11 +7,11 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class UserResource extends JsonResource
 {
 
-    protected $is_owner = false;
+    protected $isOwner = false;
 
     public function isOwner(bool $isOwner): self
     {
-        $this->is_owner = $isOwner;
+        $this->isOwner = $isOwner;
         return $this;
     }
 
@@ -21,11 +21,12 @@ class UserResource extends JsonResource
             'uuid' => $this->uuid,
             'name' => $this->name,
             'initials' => $this->initials,
-            'colour' => $this->colour,
-            'email' => $this->when($this->is_owner, $this->email),
-            'last_login_at' => $this->last_login_at->toIso8601String(),
-            'created_at' => $this->when($this->is_owner, $this->created_at->toIso8601String()),
-            'updated_at' => $this->when($this->is_owner, optional($this->updated_at)->toIso8601String()),
+            'color' => $this->color,
+            'notifications' => $this->when($this->isOwner, []),
+            'email' => $this->when($this->isOwner, $this->email),
+            'last_login_at' => optional($this->last_login_at)->toIso8601String(),
+            'created_at' => $this->when($this->isOwner, $this->created_at->toIso8601String()),
+            'updated_at' => $this->when($this->isOwner, optional($this->updated_at)->toIso8601String()),
         ];
     }
 }
