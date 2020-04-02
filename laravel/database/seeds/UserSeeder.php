@@ -1,24 +1,30 @@
 <?php
 
 use App\Models\User;
-use App\Support\Str;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
 
 class UserSeeder extends Seeder
 {
 
     public function run()
     {
-        DB::table('users')->insert([
-            'uuid' => Str::nanoId(),
-            'name' => 'First User',
-            'email' => 'admin@example.com',
-            'password' => Hash::make('this-is-a-password'),
-            'salt' => User::generateSalt(),
-            'last_login_at' => now()->toDateTimeString(),
-            'created_at' => now()->toDateTimeString(),
+        User::create([
+            'name' => 'Aled Bartholomew',
+            'email' => 'aled@example.org',
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'last_login_at' => now(),
+        ]);
+
+        User::create([
+            'name' => 'Joe Bloggs',
+            'email' => 'joe@example.org',
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+        ]);
+
+        User::create([
+            'name' => 'Jane Doe',
+            'email' => 'jane@example.org',
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
         ]);
     }
 }
