@@ -2,8 +2,11 @@
 
 namespace App\Providers;
 
-use App\Events\LoggedInViaMagicLink;
-use App\Listeners\RegenerateUserSalt;
+use App\Events\User\JoinedChannel;
+use App\Events\User\LoggedInViaMagicLink;
+use App\Listeners\JoinChannel;
+use App\Listeners\UpdateLastLoggedIn;
+use Illuminate\Auth\Events\Login as LoggedIn;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 
@@ -15,8 +18,14 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
+        JoinedChannel::class => [
+            JoinChannel::class,
+        ],
+        LoggedIn::class => [
+            UpdateLastLoggedIn::class,
+        ],
         LoggedInViaMagicLink::class => [
-            RegenerateUserSalt::class,
+            UpdateLastLoggedIn::class,
         ],
     ];
 

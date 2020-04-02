@@ -38,6 +38,11 @@ class Message extends Model
         'deleted_at',
     ];
 
+    protected $with = [
+        'channel',
+        'user'
+    ];
+
     public function channel(): Relations\BelongsTo
     {
         return $this->belongsTo(
