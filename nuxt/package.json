@@ -16,7 +16,7 @@
     "*.{js,vue}": "yarn lint",
     "*.{css,vue}": "stylelint"
   },
-  "husky": {
+  "_husky": {
     "hooks": {
       "pre-commit": "lint-staged"
     }
