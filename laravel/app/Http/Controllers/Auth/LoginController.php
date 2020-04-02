@@ -9,7 +9,6 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\URL;
 
 class LoginController extends BaseController
 {
@@ -31,7 +30,7 @@ class LoginController extends BaseController
             return $this->sendFailedLoginResponse($request);
         }
 
-        $magicLink = $user->generateLoginMagicLink('magic_link', $request->get('remember'));
+        $magicLink = $user->generateLoginMagicLink($request->get('remember'));
 
         $user->notify(new MagicLinkNotification($magicLink));
 
