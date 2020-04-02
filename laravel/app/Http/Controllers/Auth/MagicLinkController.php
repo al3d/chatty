@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Events\LoggedInViaMagicLink;
+use App\Events\User\LoggedInViaMagicLink;
 use App\Http\Controllers\BaseController;
-use App\Support\Url;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,6 +19,6 @@ class MagicLinkController extends BaseController
 
         Event::dispatch(new LoggedInViaMagicLink($user));
 
-        return Response::redirectTo(Url::frontend());
+        return Response::noContent();
     }
 }
