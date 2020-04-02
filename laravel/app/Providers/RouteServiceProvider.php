@@ -32,14 +32,6 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::boot();
-
-        /**
-         *
-         */
-        Route::bind('userHash', function ($hash) {
-            return User::whereLoginHash($hash)
-                ->firstOrFail();
-        });
     }
 
     /**

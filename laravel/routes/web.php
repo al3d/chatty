@@ -19,7 +19,7 @@ Route::prefix('/auth')->group(function () {
         Route::post('/start', Auth\StartController::class);
         Route::post('/login', Auth\LoginController::class);
         Route::post('/register', Auth\RegisterController::class);
-        Route::get('/magic-link/{userHash}', Auth\MagicLinkController::class)
+        Route::get('/magic-link/{user}', Auth\MagicLinkController::class)
             ->name('magic_link')
             ->middleware('signed');
     });
