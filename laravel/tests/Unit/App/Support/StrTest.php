@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\App\Support;
+namespace Tests\Unit\App\Support;
 
 use App\Support\Str;
 use Illuminate\Support\Facades\Config;
