@@ -28,10 +28,10 @@ class AuthTest extends TestCase
 
     public function testStartUserExists()
     {
-        $this->seed(UserSeeder::class);
+        $user = factory(User::class)->create();
 
         $response = $this->postJson('/auth/start', [
-            'email' => 'admin@example.com',
+            'email' => $user->email,
         ]);
 
         $response->assertStatus(200);
@@ -66,11 +66,11 @@ class AuthTest extends TestCase
 
     public function testNormalLogin()
     {
-        $this->seed(UserSeeder::class);
+        $user = factory(User::class)->create();
 
         $response = $this->postJson('/auth/login', [
-            'email' => 'admin@example.com',
-            'password' => 'this-is-a-password',
+            'email' => $user->email,
+            'password' => 'password', // factory passwords are always 'password'
         ]);
 
         $response->assertStatus(204);
@@ -78,10 +78,10 @@ class AuthTest extends TestCase
 
     public function testNormalLoginFails()
     {
-        $this->seed(UserSeeder::class);
+        $user = factory(User::class)->create();
 
         $response = $this->postJson('/auth/login', [
-            'email' => 'admin@example.com',
+            'email' => $user->email,
             'password' => 'unknown',
         ]);
 
@@ -90,18 +90,14 @@ class AuthTest extends TestCase
 
     public function testMagicLinkRequest()
     {
-        $this->seed(UserSeeder::class);
+        $user = factory(User::class)->create();
 
         Notification::fake();
 
-        $email = 'admin@example.com';
-
         $response = $this->postJson('/auth/login', [
-            'email' => $email,
+            'email' => $user->email,
             'magic_link' => true,
         ]);
-
-        $user = User::whereEmail($email)->first();
 
         Notification::assertSentTo($user, MagicLinkNotification::class);
         $response->assertStatus(204);
@@ -109,8 +105,6 @@ class AuthTest extends TestCase
 
     public function testMagicLinkRequestFails()
     {
-        $this->seed(UserSeeder::class);
-
         $response = $this->postJson('/auth/login', [
             'email' => 'unknown@example.com',
             'magic_link' => true,
@@ -156,9 +150,7 @@ class AuthTest extends TestCase
 
     public function testLogout()
     {
-        $this->seed(UserSeeder::class);
-
-        $user = User::whereEmail('admin@example.com')->first();
+        $user = factory(User::class)->create();
 
         Auth::login($user);
 
