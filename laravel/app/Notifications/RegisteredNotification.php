@@ -16,7 +16,7 @@ class RegisteredNotification extends Notification
 
     public function __construct($password)
     {
-        $this->generatedPassword = $password;
+        $this->password = $password;
     }
 
     public function via($notifiable)
@@ -36,7 +36,7 @@ class RegisteredNotification extends Notification
             ->subject('Welcome to chatty')
             ->line('Welcome to chatty, ' . $notifiable->name)
             ->line('We\'ve created a password for you:')
-            ->line(sprintf('<b>%s</b>', $this->password))
+            ->line($this->password)
             ->line('Keep it safe. You can change it in the app.')
             ->action('Visit Chatty', url(Url::frontend()))
             ->line('Thank you for joining!');
