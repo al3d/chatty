@@ -4,9 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUsersTable extends Migration
+class CreateChannelsTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -14,16 +13,21 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('channels', function (Blueprint $table) {
             $table->id();
             $table->char('uuid', 30)->unique();
             $table->string('name');
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->rememberToken();
-            $table->timestamp('last_login_at')->nullable();
+            $table->string('description');
+            $table->unsignedBigInteger('creator_id')->nullable()->index();
+            $table->boolean('is_deleteable')->default(true);
             $table->timestamps();
             $table->softDeletes();
+
+            $table
+                ->foreign('creator_id')
+                ->references('id')
+                ->on('users')
+            ;
         });
     }
 
@@ -34,6 +38,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('channels');
     }
 }
