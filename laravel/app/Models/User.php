@@ -78,7 +78,7 @@ class User extends Authenticatable
         return Str::initials($this->name);
     }
 
-    public function getColourAttribute(): string
+    public function getColorAttribute(): string
     {
         return Str::hexColor($this->name);
     }
