@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class MiscTest extends TestCase
+class WebTest extends TestCase
 {
     public function testFallback()
     {
