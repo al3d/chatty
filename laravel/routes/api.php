@@ -7,6 +7,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/me', Api\MeController::class);
 
+    Route::get('/channels', Api\Channel\ListController::class);
     Route::post('/channels', Api\Channel\CreateController::class);
     Route::get('/channels/{channel}', Api\Channel\ShowController::class);
     Route::patch('/channels/{channel}', Api\Channel\UpdateController::class);
