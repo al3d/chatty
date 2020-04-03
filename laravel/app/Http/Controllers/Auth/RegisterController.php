@@ -20,6 +20,13 @@ class RegisterController extends BaseController
 
     protected $generatedPassword;
 
+    public function __construct()
+    {
+        $this->middleware('json.request.required');
+        $this->middleware('guest');
+        $this->middleware('throttle:60,1');
+    }
+
     public function __invoke(Request $request)
     {
         $this->generatedPassword = Str::generatePassword();

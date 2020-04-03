@@ -11,6 +11,12 @@ class LogoutController extends BaseController
 
     use AuthenticatesUsers;
 
+    public function __construct()
+    {
+        $this->middleware('json.request.required');
+        $this->middleware('throttle:60,1');
+    }
+
     public function __invoke(Request $request)
     {
         return $this->logout($request);

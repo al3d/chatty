@@ -15,6 +15,13 @@ class LoginController extends BaseController
 
     use AuthenticatesUsers;
 
+    public function __construct()
+    {
+        $this->middleware('json.request.required');
+        $this->middleware('guest');
+        $this->middleware('throttle:60,1');
+    }
+
     public function __invoke(Request $request)
     {
         if ($request->get('magic_link')) {
