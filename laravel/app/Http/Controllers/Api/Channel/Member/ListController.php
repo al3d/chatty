@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Channel\Members;
+namespace App\Http\Controllers\Api\Channel\Member;
 
 use App\Http\Controllers\BaseController;
 use App\Http\Resources\UserResource;

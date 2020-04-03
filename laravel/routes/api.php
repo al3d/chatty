@@ -13,7 +13,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/channels/{channel}/leave', Api\Channel\LeaveController::class);
     Route::delete('/channels/{channel}', Api\Channel\DeleteController::class);
 
-    Route::get('/channels/{channel}/members', Api\Channel\Members\ListController::class);
+    Route::get('/channels/{channel}/members', Api\Channel\Member\ListController::class);
 
     Route::get('/channels/{channel}/messages', Api\Channel\Message\ListController::class);
     Route::post('/channels/{channel}/messages', Api\Channel\Message\CreateController::class);
