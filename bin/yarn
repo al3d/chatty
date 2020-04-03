@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+PWD=`pwd`
+
+/usr/local/bin/yarn --cwd ${PWD}/nuxt $@
