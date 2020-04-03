@@ -88,6 +88,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import Echo from 'laravel-echo'
+import Pusher from 'pusher-js'
 import Message from '~/components/channels/message'
 
 export default {
@@ -151,18 +153,41 @@ export default {
     }
   },
   async beforeMount() {
-    this.$echo.channel(`channel.${this.$route.params.channel}`)
+    const echo = new Echo({
+      broadcaster: 'pusher',
+      key: process.env.LOCALSOCKETS_KEY,
+      cluster: process.env.LOCALSOCKETS_CLUSTER,
+      forceTLS: true,
+      // encrypted: process.env.LOCALSOCKETS_ENCRYPTED === 'true',
+      // wsHost: process.env.LOCALSOCKETS_HOST,
+      // wsPort: process.env.LOCALSOCKETS_PORT,
+      // disableStats: true,
+      authorizer(channel, options) {
+        return {
+          async authorize(socketId, callback) {
+            try {
+              await axios.post('/broadcasting/auth', {
+                socket_id: socketId,
+                channel_name: channel.name
+              })
+              callback(false, response.data)
+            } catch (err) {
+              callback(true, err)
+            }
+          },
+        }
+      }
+    })
+    echo.channel(`channel.${this.$route.params.channel}`)
       .listen('.message.created', ev => {
         this.$store.dispatch('channel/realtimeCreated', ev)
       })
       .listen('.message.updated', ev => {
-        console.log('received:updated', ev)
         this.$store.dispatch('channel/realtimeUpdated', ev)
       })
       .listen('.message.deleted', ev => {
         this.$store.dispatch('channel/realtimeDeleted', ev)
       })
-    await this.$store.dispatch('initSocket', this.$echo.socketId())
   },
   methods: {
     async postMessage() {

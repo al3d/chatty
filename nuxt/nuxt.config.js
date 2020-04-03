@@ -10,6 +10,11 @@ export default {
     DEBUG: process.env.DEBUG,
     IS_LOCAL: process.env.IS_LOCAL,
     PUSHER_KEY: process.env.PUSHER_KEY,
+    LOCALSOCKETS_KEY: process.env.LOCALSOCKETS_KEY,
+    LOCALSOCKETS_CLUSTER: process.env.LOCALSOCKETS_CLUSTER,
+    LOCALSOCKETS_HOST: process.env.LOCALSOCKETS_HOST,
+    LOCALSOCKETS_PORT: process.env.LOCALSOCKETS_PORT,
+    LOCALSOCKETS_ENCRYPTED: process.env.LOCALSOCKETS_ENCRYPTED,
   },
 
   mode: 'spa',
@@ -79,7 +84,6 @@ export default {
    */
   buildModules: [
     '@nuxtjs/eslint-module', // https://github.com/nuxt-community/eslint-module
-    '@nuxtjs/laravel-echo', // https://github.com/nuxt-community/laravel-echo
     '@nuxtjs/stylelint-module', // https://github.com/nuxt-community/stylelint-module
     '@nuxtjs/tailwindcss', // https://github.com/nuxt-community/nuxt-tailwindcss
   ],
@@ -131,19 +135,6 @@ export default {
         tokenType: false,
       }
     }
-  },
-
-  /*
-   ** Nuxt Laravel Echo module configuration
-   */
-  echo: {
-    broadcaster: 'pusher',
-    key: process.env.PUSHER_KEY,
-    cluster: 'eu',
-    forceTLS: true,
-    authModule: true,
-    connectOnLogin: true,
-    disconnectOnLogout: true,
   },
 
   /*
