@@ -73,13 +73,7 @@
           </a>
         </div>
         <div class="mt-8 md:mt-0 md:order-1 text-gray-500">
-          &copy; {{ year }} Aled Bartholomew, built as a code test for
-          <a
-            href="https://www.signable.co.uk"
-            class="text-gray-600 hover:text-blue-900"
-            target="_blank">
-            Signable
-          </a>, using code from TailwindUI.
+          &copy; {{ year }} Aled Bartholomew
         </div>
       </div>
     </footer>

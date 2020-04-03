@@ -1,7 +1,7 @@
 {
   "name": "chatty",
   "version": "1.0.0",
-  "description": "Team chat app as code test for Signable",
+  "description": "Chatty - Tiny chat app",
   "author": "Aled Bartholomew",
   "private": true,
   "scripts": {

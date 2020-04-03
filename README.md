@@ -1,7 +1,11 @@
-# Chatty - Team chat app as code test for Signable
+# Chatty - Tiny chat app
 
 ## Overview
-The backend is written in PHP/Laravel framework, the frontend in Nuxt/Vue/JS. The dev environment is built on Docker.
+This is a tiny app that can act as a skeleton for other apps.
+
+The backend is written in Laravel, the frontend in Nuxt/Vue.
+
+A dev environment is built on Docker.
 
 Some additional helper files have been written in the `/bin` directory,
 and for brevity, the instructions will be based on those helpers.
