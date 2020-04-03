@@ -20,4 +20,4 @@ and for brevity, the instructions will be based on those helpers.
 9. Visit `http://localhost:3000`
 
 ## Notes
-- Emails are sent to a local server, and a web ui can be accessed at `https://localhost:8025`
+- Emails are sent to a local server, and a web ui can be accessed at `http://localhost:8025`
