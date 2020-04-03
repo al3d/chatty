@@ -1,101 +1,122 @@
 version: "3.4"
 
 services:
-  docker-nginx:
-    image: nginx:alpine
-    container_name: docker-nginx
-    working_dir: /application
-    restart: always
-    depends_on:
-      - app-laravel
-      # - app-websockets
-      - docker-mail
-      - docker-mysql
-      - docker-redis
-    networks:
-      - default
-    ports:
-      - "80:80"
-    volumes:
-      - ../laravel:/application:delegated
-      - ./logs/nginx:/var/log/nginx
-      - ./build/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-
-  app-laravel:
+  chatty-laravel:
     build: ./build/laravel
-    container_name: app-laravel
+    container_name: chatty-laravel
     working_dir: /application
     restart: always
     networks:
       - default
     links:
-      - docker-mail
-      - docker-mysql
-      - docker-redis
+      - chatty-mail #dev
+      - chatty-mysql
+      - chatty-redis
     volumes:
-      - nfs-laravel:/application:delegated
-      - ./laravel/logs:/application/storage/logs
-      - ./build/laravel/php-overrides.ini:/usr/local/etc/php/conf.d/99-overrides.ini
+      - chatty-data-laravel:/application:delegated #dev
+      # - ./laravel:/application #prod
+      - ./build/laravel/php.prod.ini:/usr/local/etc/php/conf.d/php-overrides-1.ini:ro
+      - ./build/laravel/php.dev.ini:/usr/local/etc/php/conf.d/php-overrides-2.ini:ro #dev
+      - ./build/laravel/supervisor.laravel.ini:/etc/supervisor.d/supervisor.ini:ro
+      # - ./build/laravel/php-fpm.conf:/usr/local/etc/php-fpm.d/www.conf:ro
 
-  # # app-websockets:
-  # # 	image: @todo:latest
-  # # 	container_name: websockets
-  # # 	restart: always
-  # # 	networks:
-  # # 		- default
-  # # 	ports:
-  # # 		- "6001:6001"
-  # # 	links:
-  # # 		- docker-redis
-
-  docker-mail:
-    image: mailhog/mailhog:latest
-    container_name: docker-mail
+  chatty-websockets:
+    build: ./build/laravel
+    container_name: chatty-websockets
+    working_dir: /application
     restart: always
-    ports:
-      - "${MAIL_PORT}:1025"
-      - "${MAIL_MAILHOG_WEBUI_PORT}:8025"
+    networks:
+      - default
+    volumes:
+      - chatty-data-laravel:/application:delegated #dev
+      - ./build/laravel/php.prod.ini:/usr/local/etc/php/conf.d/php-overrides-1.ini:ro
+      - ./build/laravel/php.dev.ini:/usr/local/etc/php/conf.d/php-overrides-2.ini:ro #dev
+      - ./build/laravel/supervisor.websockets.ini:/etc/supervisor.d/supervisor.ini:ro
 
-  docker-mysql:
+  chatty-nginx:
+    image: nginx:alpine
+    container_name: chatty-nginx
+    working_dir: /application
+    restart: always
+    depends_on:
+      - chatty-laravel
+      - chatty-websockets
+      - chatty-mail #dev
+      - chatty-mysql
+      - chatty-redis
+    networks:
+      - default
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ../laravel:/application:delegated
+      # - ./build/nginx/nginx.prod.conf:/etc/nginx/conf.d/default.conf:ro #prod
+      - ./build/nginx/nginx.dev.conf:/etc/nginx/conf.d/default.conf:ro #dev
+      - ./build/nginx/site.conf:/etc/nginx/site.conf:ro
+      # - ./certbot/conf:/etc/letsencrypt:ro # prod
+      # - ./certbot/www:/var/www/certbot:ro #prod
+
+  chatty-mysql:
     image: mysql:5.7
-    container_name: docker-mysql
+    container_name: chatty-mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_USER: ${DB_USERNAME}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
+      MYSQL_DATABASE: "${DB_DATABASE}"
+      MYSQL_USER: "${DB_USERNAME}"
+      MYSQL_PASSWORD: "${DB_PASSWORD}"
     ports:
       - "${DB_PORT}:3306"
     networks:
       - default
     volumes:
-      - data-mysql:/var/lib/mysql
+      - chatty-data-mysql:/var/lib/mysql
       - ./build/mysql/initial.sql:/docker-entrypoint-initdb.d/${DB_DATABASE}.sql:cached
 
-  docker-redis:
+  chatty-redis:
     image: redis:alpine
-    container_name: docker-redis
+    container_name: chatty-redis
     restart: always
     ports:
       - "${REDIS_PORT}"
     networks:
       - default
     volumes:
-      - data-redis:/data
+      - chatty-data-redis:/data
+
+  #dev
+  chatty-mail:
+    image: mailhog/mailhog:latest
+    container_name: chatty-mail
+    restart: always
+    ports:
+      - "${MAIL_PORT}:1025"
+      - "${MAIL_MAILHOG_WEBUI_PORT}:8025"
+
+  # #prod
+  # # https://medium.com/@pentacent/nginx-and-lets-encrypt-with-docker-in-less-than-5-minutes-b4b8a60d3a71
+  # chatty-certbot:
+  #   image: certbot/certbot
+  #   entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+  #   volumes:
+  #     - ./certbot/conf:/etc/letsencrypt:ro
+  #     - ./certbot/www:/var/www/certbot:ro
+
 
 networks:
   default:
     driver: bridge
 
 volumes:
-  nfs-laravel:
+  # dev
+  chatty-data-laravel:
     driver: local
     driver_opts:
       type: nfs
       o: addr=host.docker.internal,rw,nolock,hard,nointr,nfsvers=3
       device: ":$PWD/laravel"
-  data-mysql:
+  chatty-data-mysql:
     name: volume-mysql
-  data-redis:
+  chatty-data-redis:
     name: volume-redis

@@ -5,12 +5,19 @@ WORKDIR "/application"
 # Install additional PHP extensions required for laravel
 ###
 RUN docker-php-source extract && \
-    apk add --update --no-cache autoconf g++ make zlib-dev libzip-dev && \
-    # docker-php-ext-configure zip --with-libzip && \
+    apk add --update --no-cache \
+        autoconf \
+        g++ \
+        make \
+        zlib-dev \
+        libzip-dev \
+        supervisor \
+    && \
     pecl install redis && \
     docker-php-ext-enable redis && \
     docker-php-ext-install bcmath && \
     docker-php-ext-install opcache && \
+    docker-php-ext-install pcntl && \
     docker-php-ext-install pdo && \
     docker-php-ext-install pdo_mysql && \
     docker-php-ext-install zip && \
@@ -26,3 +33,9 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer \
     && composer global require hirak/prestissimo --no-ansi --no-plugins --no-scripts
+
+
+###
+# Launch supervisord
+###
+CMD ["supervisord", "--nodaemon", "--configuration", "/etc/supervisord.conf"]
