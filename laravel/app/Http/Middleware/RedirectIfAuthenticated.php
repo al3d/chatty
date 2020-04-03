@@ -20,7 +20,10 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
-            return Response::redirectTo(Url::frontend());
+            if (!$request->isJson()) {
+                return Response::redirectTo(Url::frontend());
+            }
+            return Response::noContent();
         }
 
         return $next($request);
