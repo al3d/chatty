@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Notifications\MagicLinkNotification;
 use App\Models\User;
 use App\Notifications\RegisteredNotification;
-use UserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification;
@@ -51,7 +50,7 @@ class AuthTest extends TestCase
 
         $user = User::whereEmail($email)->first();
 
-        // Notification::assertSentTo($user, RegisteredNotification::class);
+        Notification::assertSentTo($user, RegisteredNotification::class);
         $response->assertStatus(201);
     }
 
@@ -115,37 +114,12 @@ class AuthTest extends TestCase
 
     public function testLoginViaMagicLink()
     {
-        /**
-         * Had quite a bit of issues with this because the scope
-         * I'm using for magic link checks the hash of a concatenated
-         * value, which sqllite (the testing database) doesn't have.
-         *
-         * I've created these methods and it seems that they work,
-         * but the scope still breaks for some reason.
-         *
-         * @todo - fixme
-         */
+        $user = factory(User::class)->create();
+        $url = $user->generateLoginMagicLink(false, 24, false);
 
-        // $this->seed(UserSeeder::class);
+        $response = $this->getJson($url);
 
-        // $pdo = \DB::connection()->getPdo();
-        // $a = $pdo->sqliteCreateFunction('SHA2', function ($value) {
-        //     return hash('sha256', $value);
-        // });
-        // $b = $pdo->sqliteCreateFunction('CONCAT', function ($id, $salt) {
-        //     return $id . $salt;
-        // });
-        // // dd($a, $b);
-        // // dd(DB::select('SELECT SHA2("test")'));
-
-        // $url = User::whereEmail('admin@example.com')
-        //     ->first()
-        //     ->generateLoginMagicLink('magic_link');
-
-        // $response = $this->getJson($url);
-
-        // $response->assertStatus(302);
-        $this->assertTrue(true);
+        $response->assertStatus(204);
     }
 
     public function testLogout()
