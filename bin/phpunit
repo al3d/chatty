@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+PWD=`pwd`
+
+/bin/bash ${PWD}/bin/execute /application/vendor/bin/phpunit
