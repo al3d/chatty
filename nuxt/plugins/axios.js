@@ -1,7 +1,7 @@
-export default function ({ $axios, store }) {
+export default function ({ $axios, app }) {
   $axios.onRequest(config => {
-    if (store.getters.socketId) {
-      config.headers['X-Socket-ID'] = store.getters.socketId
+    if (app.$echo) {
+      config.headers['X-Socket-ID'] = app.$echo.socketId()
     }
     config.headers['Accept'] = 'application/json'
     config.headers['Content-Type'] = 'application/json'
