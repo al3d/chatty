@@ -7,4 +7,4 @@ NOC='\033[0m' # No Color
 [ -z "$1" ] && printf "${RED}Please specify a CLI command (e.g. ls)${NOC}" && exit
 
 PWD=`pwd`
-/bin/bash ${PWD}/bin/run exec app-laravel $@
+/bin/bash ${PWD}/bin/run exec chatty-laravel $@

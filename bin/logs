@@ -4,7 +4,7 @@ PWD=`pwd`
 
 CONTAINER=$1
 if [ -z "$1" ]; then
-    CONTAINER="app-laravel"
+    CONTAINER="chatty-laravel"
 fi
 
 /bin/bash ${PWD}/bin/run logs ${CONTAINER}

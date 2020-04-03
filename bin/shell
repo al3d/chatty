@@ -4,4 +4,9 @@ PWD=`pwd`
 RED='\033[0;31m'
 NOC='\033[0m' # No Color
 
-/bin/bash ${PWD}/bin/run exec app-laravel /bin/sh
+CONTAINER=$1
+if [ -z "$1" ]; then
+    CONTAINER="chatty-laravel"
+fi
+
+/bin/bash ${PWD}/bin/run exec ${CONTAINER} /bin/sh
