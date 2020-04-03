@@ -16,12 +16,10 @@ class DeleteController extends BaseController
     {
         $this->authorize('delete', $message);
 
-        $uuid = $message->uuid;
-
         // soft-delete
         $message->delete();
 
-        broadcast(new Deleted($uuid))->toOthers();
+        broadcast(new Deleted($message))->toOthers();
 
         return Response::noContent();
     }

@@ -18,15 +18,13 @@ class CreateController extends BaseController
     {
         $this->authorize('create', Channel::class);
 
-        $data = [
+        $data = Validator::make([
             'name' => Str::slug($request->get('name')),
             'description' => $request->get('description'),
-        ];
-
-        $data = Validator::make($data, [
+        ], [
             'name' => ['required', 'alpha_dash', 'max:20', 'unique:channels'],
             'description' => ['required', 'string', 'max:255'],
-        ]);
+        ])->validate();
 
         $channel = $request
             ->user()

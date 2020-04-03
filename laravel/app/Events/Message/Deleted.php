@@ -18,10 +18,12 @@ class Deleted implements ShouldBroadcastNow
     use SerializesModels;
 
     public $uuid;
+    protected $channel;
 
-    public function __construct($uuid)
+    public function __construct($message)
     {
-        $this->uuid = $uuid;
+        $this->uuid = $message->uuid;
+        $this->channel = $message->channel->name;
     }
 
     public function broadcastOn()
@@ -30,7 +32,7 @@ class Deleted implements ShouldBroadcastNow
          * An issue with authorizing private channels with laravel sanctum means
          * that we're going public... for now
          */
-        return new Channel('channel.' . $this->message->channel->name);
+        return new Channel('channel.' . $this->channel);
     }
 
     public function broadcastAs()

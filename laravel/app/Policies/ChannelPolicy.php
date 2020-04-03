@@ -18,7 +18,7 @@ class ChannelPolicy
 
     public function update(User $user, Channel $channel)
     {
-        return $user->id === $channel->user_id
+        return $user->id === $channel->creator_id
             ? Response::allow()
             : Response::deny('You cannot edit this channel')
         ;
@@ -27,9 +27,9 @@ class ChannelPolicy
     public function delete(User $user, Channel $channel)
     {
         if (!$channel->is_deleteable) {
-            return Response::deny('This channel is un-deleteable')
+            return Response::deny('This channel is un-deleteable');
         }
-        return $user->id === $channel->user_id
+        return $user->id === $channel->creator_id
             ? Response::allow()
             : Response::deny('You cannot delete this channel')
         ;
