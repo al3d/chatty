@@ -1,5 +1,7 @@
 <template>
-  <div class="p-4 m-4 rounded-lg bg-white border border-gray-400 shadow-sm flex">
+  <div
+    :class="{ 'border': !isOwner, 'border-2' : isOwner }"
+    class="p-4 m-4 rounded-lg bg-white border-gray-400 shadow-sm flex">
     <div class="flex flex-col justify-between">
         <span
           :title="user.name"
@@ -52,7 +54,15 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import formatDistanceToNow from 'date-fns/formatDistanceToNow'
+import { formatDistanceToNow, add, isAfter } from 'date-fns'
+
+const DURATION_1_SECOND = 1000
+const DURATION_5_SECONDS = DURATION_1_SECOND * 5
+const DURATION_10_SECONDS = DURATION_1_SECOND * 10
+const DURATION_1_MINUTE = DURATION_1_SECOND * 60
+const DURATION_5_MINUTES = DURATION_1_MINUTE * 5
+const DURATION_10_MINUTES = DURATION_1_MINUTE * 10
+const DURATION_1_HOUR = DURATION_1_MINUTE * 60
 
 export default {
   props: {
@@ -71,6 +81,14 @@ export default {
       default: true,
     },
   },
+  data() {
+    return {
+      delay: DURATION_10_SECONDS,
+      timeoutId: null,
+      createdAt: null,
+      updatedAt: null,
+    }
+  },
   computed: {
     ...mapGetters([
       'user',
@@ -80,12 +98,6 @@ export default {
     },
     channel() {
       return this.data.channel
-    },
-    createdAt() {
-      return this.formattedDate(this.data.created_at)
-    },
-    updatedAt() {
-      return this.data.updated_at ? this.formattedDate(this.data.updated_at) : null
     },
     message() {
       return this.data.message
@@ -109,7 +121,29 @@ export default {
       return this.data.is_deleted
     },
   },
+  beforeMount() {
+    this.updateTimestamps()
+    this.timeoutId = setTimeout(this.updateTimestamps, this.delay)
+  },
+  beforeDestroy() {
+    clearTimeout(this.timeoutId)
+  },
   methods: {
+    updateTimestamps() {
+      this.createdAt = this.formattedDate(this.data.created_at)
+      this.updatedAt = this.data.updated_at ? this.formattedDate(this.data.updated_at) : null
+      // const delayDate = new Date(this.data.updated_at || this.data.created_at)
+      // if (isAfter(delayDate, add(new Date, { minutes: 1 }))) {
+      //   this.delay = DURATION_10_SECONDS
+      // }
+      // if (isAfter(delayDate, add(new Date, { minutes: 2 }))) {
+      //   this.delay = DURATION_10_MINUTES
+      // }
+      // if (isAfter(delayDate, add(new Date, { minutes: 10 }))) {
+      //   this.delay = DURATION_1_HOUR
+      // }
+      this.timeoutId = setTimeout(this.updateTimestamps, this.delay)
+    },
     formattedDate(dateStr) {
       return formatDistanceToNow(new Date(dateStr), { includeSeconds: true })
     }
