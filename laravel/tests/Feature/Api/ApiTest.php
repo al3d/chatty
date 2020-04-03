@@ -20,7 +20,9 @@ class ApiTest extends TestCase
             ->getJson('/api/me')
         ;
 
-        $response->assertStatus(200);
-        $response->assertJson(['data' => true]);
+        $response
+            ->assertStatus(200)
+            ->assertJson(['data' => true])
+        ;
     }
 }

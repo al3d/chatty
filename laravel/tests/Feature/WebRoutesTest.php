@@ -2,10 +2,9 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class WebTest extends TestCase
+class WebRoutesTest extends TestCase
 {
     public function testFallback()
     {

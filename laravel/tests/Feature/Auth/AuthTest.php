@@ -21,8 +21,10 @@ class AuthTest extends TestCase
             'email' => 'unknown@example.com',
         ]);
 
-        $response->assertStatus(200);
-        $response->assertJson(['exists' => false]);
+        $response
+            ->assertStatus(200)
+            ->assertJson(['exists' => false])
+        ;
     }
 
     public function testStartUserExists()
@@ -33,8 +35,10 @@ class AuthTest extends TestCase
             'email' => $user->email,
         ]);
 
-        $response->assertStatus(200);
-        $response->assertJson(['exists' => true]);
+        $response
+            ->assertStatus(200)
+            ->assertJson(['exists' => true])
+        ;
     }
 
     public function testRegister()
@@ -51,6 +55,7 @@ class AuthTest extends TestCase
         $user = User::whereEmail($email)->first();
 
         Notification::assertSentTo($user, RegisteredNotification::class);
+
         $response->assertStatus(201);
     }
 
@@ -99,6 +104,7 @@ class AuthTest extends TestCase
         ]);
 
         Notification::assertSentTo($user, MagicLinkNotification::class);
+
         $response->assertStatus(204);
     }
 
