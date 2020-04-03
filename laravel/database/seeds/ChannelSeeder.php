@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Channel;
-use App\Models\ChannelUser;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -17,10 +16,10 @@ class ChannelSeeder extends Seeder
         ]);
 
         User::all()->each(function (User $user) use ($channel) {
-            ChannelUser::create([
-                'channel_id' => $channel->id,
-                'user_id' => $user->id,
-            ]);
+            $channel
+                ->members()
+                ->attach($user)
+            ;
         });
     }
 }

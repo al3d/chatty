@@ -16,9 +16,13 @@ class MessageSeeder extends Seeder
         factory(Message::class, 100)
             ->create()
             ->each(function (Message $message) use ($users, $channel) {
-                $message->user_id = $users->random()->id;
-                $message->channel_id = $channel->id;
-                $message->save();
+                $message
+                    ->channel()
+                    ->associate($channel)
+                    ->user()
+                    ->associate($users->random())
+                    ->save()
+                ;
             })
         ;
     }
