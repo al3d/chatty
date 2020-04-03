@@ -52,20 +52,34 @@ class Str extends BaseStr
      */
     public static function initials(string $name): string
     {
-        /**
-         * Convert multi-byte characters (for more exotic names) into
-         * their ascii counterparts for consistency
-         */
-        $name = static::ascii($name);
-        $words = explode(' ', static::upper($name));
-        if (count($words) >= 2) {
-            return static::substr($words[0], 0, 1) . static::substr(end($words), 0, 1);
+        $words = static::of($name)
+            ->ascii()
+            ->trim()
+            ->upper()
+            ->explode(' ')
+        ;
+        if ($words->count() >= 2) {
+            return sprintf(
+                '%s%s',
+                static::substr($words->first(), 0, 1),
+                static::substr($words->last(), 0, 1)
+            );
         }
-        $words = explode('-', static::kebab($name));
-        if (count($words) > 1) {
-            return static::initials(implode(' ', $words));
+        $words = static::of($name)
+            ->ascii()
+            ->trim()
+            ->kebab()
+            ->explode('-')
+        ;
+        if ($words->count() > 1) {
+            return static::initials($words->join(' '));
         }
-        return static::upper(static::substr($name, 0, 2));
+        return static::of($name)
+            ->ascii()
+            ->trim()
+            ->upper()
+            ->substr(0, 2)
+        ;
     }
 
     public static function hexColor(string $str): string
