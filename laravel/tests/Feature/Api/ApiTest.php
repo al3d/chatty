@@ -1,14 +1,9 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Api;
 
-use App\Notifications\MagicLinkNotification;
 use App\Models\User;
-use App\Notifications\RegisteredNotification;
-use UserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 class ApiTest extends TestCase
@@ -18,13 +13,12 @@ class ApiTest extends TestCase
 
     public function testMeEndpoint()
     {
-        $this->seed(UserSeeder::class);
-
-        $user = User::whereEmail('admin@example.com')->first();
+        $user = factory(User::class)->make();
 
         $response = $this
             ->actingAs($user)
-            ->getJson('/api/me');
+            ->getJson('/api/me')
+        ;
 
         $response->assertStatus(200);
         $response->assertJson(['data' => true]);
