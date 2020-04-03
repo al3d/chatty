@@ -88,12 +88,15 @@ class User extends Authenticatable
         return [$this->email => $this->name];
     }
 
-    public function generateLoginMagicLink($remember = false, $expiryHours = 24)
+    public function generateLoginMagicLink($remember = false, $expiryHours = 24, $toFrontend = true)
     {
         $url = URL::temporarySignedRoute('magic_link', Carbon::now()->addHours($expiryHours), [
             'user' => $this,
             'remember' => $remember ? 'true' : 'false',
         ]);
+        if (!$toFrontend) {
+            return $url;
+        }
         return Str::replaceFirst(
             URL::route('magic_link', [ 'user' => $this ]), // generating the same route without signed bits
             UrlHelper::frontend(sprintf('/login/magically/%s', $this->uuid)), // replacing with frontend. Hacky, but it'll do for now
