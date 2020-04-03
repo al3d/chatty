@@ -38,6 +38,11 @@ class Message extends Model
         'deleted_at',
     ];
 
+    protected $casts = [
+        'channel_id' => 'integer',
+        'user_id' => 'integer',
+    ];
+
     protected $with = [
         'channel',
         'user'

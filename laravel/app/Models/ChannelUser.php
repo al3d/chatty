@@ -17,6 +17,11 @@ class ChannelUser extends Model
         'user_id',
     ];
 
+    protected $casts = [
+        'channel_id' => 'integer',
+        'user_id' => 'integer',
+    ];
+
     public function channel(): Relations\BelongsTo
     {
         return $this->belongsTo(

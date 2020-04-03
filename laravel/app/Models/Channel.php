@@ -36,6 +36,7 @@ class Channel extends Model
     ];
 
     protected $casts = [
+        'creator_id' => 'integer',
         'is_deleteable' => 'boolean',
     ];
 
